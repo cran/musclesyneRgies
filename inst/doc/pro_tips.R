@@ -21,6 +21,7 @@ library(musclesyneRgies)
 #    cl <- parallel::makeCluster(max(1, parallel::detectCores() - 1))
 #  }
 #  # Extract synergies in parallel (will speed up computation only for larger data sets)
+#  # with a useful progress bar from `pbapply`
 #  SYNS <- pbapply::pblapply(FILT_EMG, musclesyneRgies::synsNMF, cl = cl)
 #  
 #  parallel::stopCluster(cl)

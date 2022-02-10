@@ -28,12 +28,11 @@ Plots can then be saved with the preferred export method, such as \code{ggplot2:
 data(SYNS)
 
 # Classify synergies with k-means
-SYNS_classified <- classify_kmeans(SYNS,
-  interactive = FALSE
-)
+SYNS_classified <- classify_kmeans(SYNS)
 
-# Plot
-plot_classified_syns_UMAP(SYNS_classified,
-  condition = "TW"
+# Save plot
+pp <- plot_classified_syns_UMAP(SYNS_classified,
+  condition = "TW",
+  show_plot = FALSE
 )
 }

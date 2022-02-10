@@ -269,7 +269,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Say you recorded more cycles than those you want to consider for the analysis</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># You can subset the raw data (here we keep only 3 cycles, starting from the first)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>RAW_DATA_subset <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>RAW_DATA_subset <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  RAW_DATA,</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">subsetEMG</span>(x,</span>
@@ -288,10 +288,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># - Low-pass IIR Butterworth 4th order filter (cut-off frequency 20 Hz)</span></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># - Minimum subtraction</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># - Amplitude normalisation</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>filtered_EMG <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(RAW_DATA, <span class="cf">function</span>(x) <span class="fu">filtEMG</span>(x))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>filtered_EMG <span class="ot">&lt;-</span> <span class="fu">lapply</span>(RAW_DATA, <span class="cf">function</span>(x) <span class="fu">filtEMG</span>(x))</span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># If you decide to change filtering parameters, just give them as arguments:</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>another_filtered_EMG <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>another_filtered_EMG <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  RAW_DATA,</span>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filtEMG</span>(x,</span>
@@ -311,7 +311,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we time-normalise the filtered EMG, including only three cycles and trimming first</span></span>
 <span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co"># and last to remove unwanted filtering effects</span></span>
 <span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Each cycle is divided into two parts, each normalised to a length of 100 points</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>norm_EMG <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>norm_EMG <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  filtered_EMG,</span>
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
 <span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">normEMG</span>(x,</span>
@@ -327,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co"># of phases you want your cycles to be divided into</span></span>
 <span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we divide each cycle with a ratio of 60%-40% and keep only two cycles (first and last</span></span>
 <span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># are still trimmed, so to have two cycles you must start with at least four available)</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>another_norm_EMG <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>another_norm_EMG <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  filtered_EMG,</span>
 <span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">normEMG</span>(x,</span>
@@ -340,7 +340,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co"># At this stage, synergies can be extracted</span></span>
 <span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the core function to extract synergies via NMF</span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>SYNS <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(norm_EMG, synsNMF)</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>SYNS <span class="ot">&lt;-</span> <span class="fu">lapply</span>(norm_EMG, synsNMF)</span>
 <span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Now synergies don&#39;t have a functional order and need classification</span></span>
 <span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s load the built-in data set to have some more trial to classify</span></span>
@@ -352,10 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a><span class="co"># - Full width at half maximum on the x-axis</span></span>
 <span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="co"># - Centre of activity on the y-axis</span></span>
 <span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co"># (both referred to the motor primitives of the classified muscle synergies)</span></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>SYNS_classified <span class="ot">&lt;-</span> <span class="fu">classify_kmeans</span>(SYNS,</span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="at">interactive =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_plot =</span> <span class="cn">FALSE</span></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>SYNS_classified <span class="ot">&lt;-</span> <span class="fu">classify_kmeans</span>(SYNS)</span></code></pre></div>
 <p>Done! Now the analysis of extracted synergies can start.</p>
 </div>
 

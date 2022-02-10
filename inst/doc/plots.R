@@ -22,9 +22,9 @@ pp <- plot_rawEMG(
 
 ## ---- message = FALSE, results = "hide", fig.width = 7, fig.asp = 0.9---------
 # Filter...
-filtered_EMG <- pbapply::pblapply(RAW_DATA, function(x) filtEMG(x))
+filtered_EMG <- lapply(RAW_DATA, function(x) filtEMG(x))
 # ...and normalise raw EMG
-norm_EMG <- pbapply::pblapply(
+norm_EMG <- lapply(
   filtered_EMG,
   function(x) {
     normEMG(x,
@@ -47,7 +47,7 @@ pp <- plot_meanEMG(
 
 ## ---- message = FALSE, results = "hide", fig.width = 6, fig.asp = 1-----------
 # Extract synergies via NMF
-SYNS <- pbapply::pblapply(norm_EMG, synsNMF)
+SYNS <- lapply(norm_EMG, synsNMF)
 
 # The extracted synergies can be plotted with the following
 pp <- plot_syn_trials(SYNS[[1]],
@@ -65,10 +65,7 @@ data("SYNS")
 # Classify with k-means
 # A plot of FWHM vs. CoA of the classified synergies appears by default
 # This should help the user to identify potential malfunctions in the clustering
-SYNS_classified <- classify_kmeans(
-  SYNS,
-  interactive = FALSE
-)
+SYNS_classified <- classify_kmeans(SYNS)
 
 ## ---- message = FALSE, results = "hide", fig.width = 6, fig.asp = 1-----------
 # Classified synergies can be finally plotted with
