@@ -2,7 +2,7 @@
 % Please edit documentation in R/rawdata.R
 \name{rawdata}
 \alias{rawdata}
-\title{Import ASCII data into R}
+\title{Import RData or ASCII data into R}
 \usage{
 rawdata(path_cycles = NA, path_emg = NA, header_cycles, header_emg = TRUE)
 }
@@ -11,9 +11,9 @@ rawdata(path_cycles = NA, path_emg = NA, header_cycles, header_emg = TRUE)
 
 \item{path_emg}{Optional, path where raw EMG files are located}
 
-\item{header_cycles}{Logical, are the cycle-ASCII files containing a named header (optional)?}
+\item{header_cycles}{Logical, are the cycle files containing a named header (the header is optional)?}
 
-\item{header_emg}{Logical, are the raw EMG-ASCII files containing a named header (they should)?}
+\item{header_emg}{Logical, are the raw EMG files containing a named header (they should)?}
 }
 \value{
 List of objects of class \code{EMG}, each with elements:\cr
@@ -23,12 +23,15 @@ List of objects of class \code{EMG}, each with elements:\cr
 }
 }
 \description{
-Import ASCII data into R
+Import RData or ASCII data into R
 }
 \details{
-Supported are tab- or comma-separated files readable through \code{read.table()} or \code{read.csv()}.
+Supported are R lists saved as RData files or tab- or comma-separated files
+readable through \code{read.table()} or \code{read.csv()}.
 The first column of each raw emg file must be time in the same units as those used for the
 cycle timings (e.g., [s] or [ms]).
+If reading from RData files, please call cycles \code{CYCLE_TIMES.RData} and raw EMG \code{RAW_EMG.RData}. Lists
+must be saved with \code{save()}.
 }
 \examples{
 # Load built-in data set
@@ -46,7 +49,7 @@ dir.create("emg", showWarnings = FALSE)
 # Export ASCII data from built-in data set to the new subfolders
 write.table(RAW_DATA[[1]]$cycles,
   file = paste0(data_path, "cycles", .Platform$file.sep, names(RAW_DATA)[1], ".txt"),
-  sep = "\t", row.names = FALSE
+  sep = "\t", row.names = FALSE, col.names = FALSE
 )
 write.table(RAW_DATA[[1]]$emg,
   file = paste0(data_path, "emg", .Platform$file.sep, names(RAW_DATA)[1], ".txt"),

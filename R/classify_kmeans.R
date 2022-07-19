@@ -8,8 +8,17 @@
 #' @details
 #' This function must be applied to a list with a sufficient amount of trials, otherwise the
 #' classification will not work. Typically, at least 10 trials for the same condition are needed
-#' for satisfactory classification. If `show_plot` is TRUE (default) plots are also shown in the active graphic device.
+#' for satisfactory classification. If `show_plot` is TRUE (default) plots are also shown in the
+#' active graphic device.
 #' Plots can then be saved with the preferred export method, such as `ggplot2::ggsave`.
+#' The algorithm used is the default for stats::kmeans (Hartigan and Wong, 1979), which is known
+#' for its robustness to local minima. Nonetheless, the stochastic nature of the algorithm
+#' should prompt the user to attempt a few classifications and analyse their stability,
+#' before drawing conclusions on e.g. the number of fundamental synergies and/or their function.
+#' While the default parameters are optimised for human locomotion, it is suggested to test the
+#' function with different mean squared error thresholds, which is a crucial quantity to
+#' determine the number of clusters. Inspection and plotting are as well highly recommended
+#' to gain more insight into the classification process.
 #'
 #' @return
 #' List of `musclesyneRgies` objects, each with elements:\cr
@@ -87,12 +96,7 @@ classify_kmeans <- function(x,
   data_M <- plyr::ldply(M, function(y) t(data.frame(y)))
   if (interactive()) message("...done!")
 
-  # Check if names are the same for primitives and modules
-  if (identical(data_P$.id, data_M$.id)) {
-    trials <- data_M$.id
-  } else {
-    stop("The names of primitives and modules are not the same!!!")
-  }
+  trials <- data_M$.id
 
   # Give names to trials (start from synergy zero because
   # the function "make.unique" works like that)
@@ -127,7 +131,7 @@ classify_kmeans <- function(x,
     # Set zeroes to smallest non-negative entry
     temp <- y
     temp[temp == 0] <- Inf
-    y[y == 0] <- min(temp, na.rm = T)
+    y[y == 0] <- min(temp, na.rm = TRUE)
     # Normalise to maximum
     y <- y / max(y)
 
@@ -161,7 +165,7 @@ classify_kmeans <- function(x,
       break
     }
     withinss_interp <- data.frame(
-      xx = c(1:(muscle_num - iter + 1)),
+      xx = 1:(muscle_num - iter + 1),
       yy = withinss[iter:(muscle_num)]
     )
 
@@ -212,12 +216,12 @@ classify_kmeans <- function(x,
   )
 
   # Calculate mutual score squared residuals and find minimum
-  perms <- gtools::permutations(nrow(geoms_P), r = 2, repeats.allowed = T)
+  perms <- expand.grid(geoms_P$clust_P, geoms_P$clust_P)
   resids <- numeric()
-  for (perm in 1:nrow(perms)) {
+  for (perm in seq_len(nrow(perms))) {
     resids[perm] <- (geoms_P$score[perms[perm, 1]] - geoms_M$score[perms[perm, 2]])^2
   }
-  perms <- perms[sort(resids, decreasing = F, index.return = T)$ix, ]
+  perms <- perms[sort(resids, decreasing = FALSE, index.return = TRUE)$ix, ]
   perms <- data.frame(perms[-which(duplicated(perms[, 1])), ])
   colnames(perms) <- c("old", "new")
 
@@ -252,7 +256,6 @@ classify_kmeans <- function(x,
         "\nModule-based classification will be discarded!"
       )
     }
-
     orders$clusters_M <- orders$clusters_P
   }
 
@@ -299,15 +302,15 @@ classify_kmeans <- function(x,
 
   # Create ordering rule
   order_rule <- data.frame(
-    old = c(1:clust_num),
+    old = 1:clust_num,
     new = order(apply(mean_P, 1, CoA))
   )
 
   # Apply new order to mean curves
   mean_P <- mean_P[order_rule$new, ]
   mean_M <- mean_M[order_rule$new, ]
-  rownames(mean_P) <- paste0("Syn", 1:nrow(mean_P))
-  rownames(mean_M) <- paste0("Syn", 1:nrow(mean_M))
+  rownames(mean_P) <- paste0("Syn", seq_len(nrow(mean_P)))
+  rownames(mean_M) <- paste0("Syn", seq_len(nrow(mean_M)))
   colnames(mean_M) <- colnames(temp_M)
 
   # Apply new order to all
@@ -341,7 +344,7 @@ classify_kmeans <- function(x,
       graphics::barplot(mean_M[syn, ])
       # Plot motor primitives
       plot(
-        x = c(1:ncol(mean_P)), y = mean_P[syn, ],
+        x = seq_len(ncol(mean_P)), y = mean_P[syn, ],
         ty = "l", main = paste0("Synergy ", syn),
         xlab = "", ylab = "",
         xaxt = "n", yaxt = "n", lwd = 2
@@ -381,19 +384,19 @@ classify_kmeans <- function(x,
           orders_new[cc] <- pp
         }
         orders_new <- as.numeric(orders_new)
-        orders_new <- sort.int(orders_new, index.return = T)$ix
+        orders_new <- sort.int(orders_new, index.return = TRUE)$ix
 
         # Re-create ordering rule
         order_rule <- data.frame(
-          old = c(1:clust_num),
+          old = 1:clust_num,
           new = orders_new
         )
 
         # Make new plots for checking
         mean_P_temp <- mean_P[order_rule$new, ]
         mean_M_temp <- mean_M[order_rule$new, ]
-        rownames(mean_P_temp) <- paste0("Syn", 1:nrow(mean_P_temp))
-        rownames(mean_M_temp) <- paste0("Syn", 1:nrow(mean_M_temp))
+        rownames(mean_P_temp) <- paste0("Syn", seq_len(nrow(mean_P_temp)))
+        rownames(mean_M_temp) <- paste0("Syn", seq_len(nrow(mean_M_temp)))
 
         # Re-plot classified synergies
         oldpar <- graphics::par(no.readonly = TRUE)
@@ -413,7 +416,7 @@ classify_kmeans <- function(x,
           graphics::barplot(mean_M_temp[syn, ])
           # Plot motor primitives
           plot(
-            x = c(1:ncol(mean_P_temp)), y = mean_P_temp[syn, ],
+            x = seq_len(ncol(mean_P_temp)), y = mean_P_temp[syn, ],
             ty = "l", main = paste0("Synergy ", syn),
             xlab = "", ylab = "",
             xaxt = "n", yaxt = "n", lwd = 2
@@ -430,7 +433,7 @@ classify_kmeans <- function(x,
             graphics::barplot(mean_M[syn, ])
             # Plot motor primitives
             plot(
-              x = c(1:ncol(mean_P)), y = mean_P[syn, ],
+              x = seq_len(ncol(mean_P)), y = mean_P[syn, ],
               ty = "l", main = paste0("Synergy ", syn),
               xlab = "", ylab = "",
               xaxt = "n", yaxt = "n", lwd = 2
@@ -441,8 +444,8 @@ classify_kmeans <- function(x,
       # Apply new order to mean curves
       mean_P <- mean_P[order_rule$new, ]
       mean_M <- mean_M[order_rule$new, ]
-      rownames(mean_P) <- paste0("Syn", 1:nrow(mean_P))
-      rownames(mean_M) <- paste0("Syn", 1:nrow(mean_M))
+      rownames(mean_P) <- paste0("Syn", seq_len(nrow(mean_P)))
+      rownames(mean_M) <- paste0("Syn", seq_len(nrow(mean_M)))
 
       # Apply new order to all
       temp_P <- orders$clusters_P
@@ -463,7 +466,7 @@ classify_kmeans <- function(x,
     dupl <- which(duplicated(trial$clusters_P))
 
     if (length(dupl) > 0) {
-      for (syn in c(1:clust_num)) {
+      for (syn in 1:clust_num) {
         dupl <- grep(paste0("^", syn, "$"), trial$clusters_P)
 
         if (length(dupl) <= 1) {
@@ -471,7 +474,7 @@ classify_kmeans <- function(x,
         } else {
           R2 <- numeric()
           P2 <- as.numeric(mean_P[syn, ])
-          for (dd in c(1:length(dupl))) {
+          for (dd in seq_len(length(dupl))) {
             trial_syn <- rownames(trial)[dupl[dd]]
             # Calculate R2 between each duplicated primitive and the mean
             P1 <- as.numeric(data_P[grep(trial_syn, rownames(data_P)), ])

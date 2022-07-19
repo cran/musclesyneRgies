@@ -11,4 +11,8 @@ test_that("sMLE works", {
     expected = 0.26,
     tolerance = 0.02
   )
+
+  class(primitives) <- "badclass"
+  expect_error(musclesyneRgies::sMLE(primitives))
+
 })

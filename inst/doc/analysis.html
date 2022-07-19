@@ -14,7 +14,19 @@
 
 <title>Muscle synergy analysis with musclesyneRgies</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -24,6 +36,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -125,7 +138,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -137,14 +330,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<h1 class="title toc-ignore">Muscle synergy analysis with musclesyneRgies</h1>
+<h1 class="title toc-ignore">Muscle synergy analysis with
+musclesyneRgies</h1>
 
 
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(musclesyneRgies)</span></code></pre></div>
 <div id="analysis-functions" class="section level2">
 <h2>Analysis functions</h2>
-<p>For example, one can measure the full width at half maximum (FWHM) of the motor primitives or their centre of activity (CoA).</p>
+<p>For example, one can measure the full width at half maximum (FWHM) of
+the motor primitives or their centre of activity (CoA).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a typical motor primitive of 30 cycles (from locomotion)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;primitive&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -165,8 +360,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prim_sub, <span class="at">ty =</span> <span class="st">&quot;l&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Time&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Amplitude&quot;</span>)</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(hm_plot, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="dv">2</span>) <span class="co"># FWHM (horizontal, in red)</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>graphics<span class="sc">::</span><span class="fu">abline</span>(<span class="at">v =</span> prim_sub_CoA, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="dv">4</span>) <span class="co"># Coa (vertical, in blue)</span></span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --> Or perhaps one might want to investigate the nonlinear behaviour of a long primitive.</p>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>graphics<span class="sc">::</span><span class="fu">abline</span>(<span class="at">v =</span> prim_sub_CoA, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="dv">4</span>) <span class="co"># CoA (vertical, in blue)</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- -->
+Or perhaps one might want to investigate the nonlinear behaviour of a
+long primitive.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>prim <span class="ot">&lt;-</span> primitive<span class="sc">$</span>signal</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the local complexity or Higuchi&#39;s fractal dimension (HFD)</span></span>

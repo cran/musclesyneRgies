@@ -1,12 +1,17 @@
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04439/status.svg)](https://doi.org/10.21105/joss.04439)
+[![Twitter Follow](https://img.shields.io/twitter/follow/musclesyneRgies?style=social)](https://twitter.com/musclesyneRgies)
+
 # musclesyneRgies
 ![](./images/musclesyneRgies_logo.png)
 
 The package `musclesyneRgies` allows to extract muscle synergies from electromyographic (EMG) data through linear decomposition based on unsupervised machine learning. Specifically, here we adopted the non-negative matrix factorization (NMF) framework, due to the non-negative nature of EMG biosignals. However, this method can be applied to any other kind of data sets, from time series to images.
+Muscle synergies are orchestrated activations of functionally-similar muscle groups. The theory stems from original thoughts by the neurophysiologist Nikolai Bernstein and it suggests that the central nervous system might take advantage of such a strategy to simplify the production and control of movement. Instead of commanding each muscle individually for executing a particular task, the central nervous system might send common (but individually weighted) commands to several muscles at the same time. An idea that can be modelled by linear decomposition algorithms such as NMF, the output of which consists of a set of time-independent (or weightings, also called motor modules) and a set of time dependent coefficients (also called motor primitives).
+If you use this R package, please cite [Santuz, 2022](https://joss.theoj.org/papers/10.21105/joss.04439).
 
 ## Installation
 - [Download R](https://cran.r-project.org/mirrors.html) and install (please have R >= `4.1.0`)
 - [Download RStudio](https://www.rstudio.com/products/rstudio/download/) and install
-- Open RStudio and install the package `musclesyneRgies` with `install.packages("musclesyneRgies")`.
+- Open RStudio and install the package with `install.packages("musclesyneRgies")`.
 
 Done! Now the package is installed on your computer.
 
@@ -35,6 +40,17 @@ SYNS_classified <- lapply(RAW_DATA, filtEMG) |>
   classify_kmeans()
 ```
 Compact, isn't it? You can of course tweak and tune all the above to fit your scientific needs and more is explained below and in the [vignettes](https://github.com/alesantuz/musclesyneRgies/tree/master/vignettes).
+To try the above code with real data, it is possible to download the test data set from Zenodo as follows:
+
+```r
+# Download test data set containing EMG from human locomotion
+url <- "https://zenodo.org/record/6645483/files/RAW_DATA.RData"
+download.file(url, destfile = "RAW_DATA.RData", mode = "wb")
+# Load test data set
+load("RAW_DATA.RData")
+# Subset data to allow for correct classification (TW = treadmill walking, TR = treadmill running)
+RAW_DATA <- RAW_DATA[grep("_TW_", names(RAW_DATA))]
+```
 
 ## How to prepare your data set
 The data set must be in a specific format to fit the analysis framework. However, if you worked with versions <= `0.8.7-alpha` you will find that requirements are now much less stringent, to the benefit of usability. What you need (see also `?rawdata`) is a list of objects of class `EMG`, each of which is a list with two elements:
@@ -65,20 +81,20 @@ head(RAW_DATA[[1]]$emg)
 ```
 
 ```
-##     time         ME        MA       FL        RF        VM        VL        ST
-## 1  0.014   0.201416 -6.445313 22.65930 -0.100708 -0.906372  7.351685 -1.309204
-## 3  0.015  -2.316284 -0.100708 24.16992  1.812744 -1.913452 -4.531860  2.920532
-## 5  0.016  -7.351685 -7.150269 23.46497  0.704956 -5.337524  3.424072 -0.604248
-## 7  0.017  -5.538940 -3.222656 27.49329  5.236816 -4.330444 -1.611328  0.503540
-## 9  0.018 -10.675049 -5.740356 23.16284 -0.704956  2.014160  1.007080 -2.719116
-## 11 0.019 -12.487793 -3.927612 19.94019  2.014160 -5.136108 -0.805664  0.000000
-##           BF         TA         PL        GM         GL         SO
-## 1  -7.351685 -44.311523   2.316284  8.862305  -8.358765   8.963013
-## 3  -2.719116 -24.673462  -0.704956 10.070801 -10.775757   1.611328
-## 5  -8.963013 -18.630981 -15.408325  8.358765  -0.704956  -5.035400
-## 7  -5.941772   0.906372 -11.883545  5.136108  -4.330444 -10.574341
-## 9  -3.826904 -25.680542   1.812744 -5.136108  -1.913452  -8.761597
-## 11 -3.524780 -43.807983   6.546021 10.574341  -0.100708   0.302124
+##    time         ME        MA       FL        RF        VM        VL        ST
+## 1 0.014   0.201416 -6.445313 22.65930 -0.100708 -0.906372  7.351685 -1.309204
+## 2 0.015  -2.316284 -0.100708 24.16992  1.812744 -1.913452 -4.531860  2.920532
+## 3 0.016  -7.351685 -7.150269 23.46497  0.704956 -5.337524  3.424072 -0.604248
+## 4 0.017  -5.538940 -3.222656 27.49329  5.236816 -4.330444 -1.611328  0.503540
+## 5 0.018 -10.675049 -5.740356 23.16284 -0.704956  2.014160  1.007080 -2.719116
+## 6 0.019 -12.487793 -3.927612 19.94019  2.014160 -5.136108 -0.805664  0.000000
+##          BF         TA         PL        GM         GL         SO
+## 1 -7.351685 -44.311523   2.316284  8.862305  -8.358765   8.963013
+## 2 -2.719116 -24.673462  -0.704956 10.070801 -10.775757   1.611328
+## 3 -8.963013 -18.630981 -15.408325  8.358765  -0.704956  -5.035400
+## 4 -5.941772   0.906372 -11.883545  5.136108  -4.330444 -10.574341
+## 5 -3.826904 -25.680542   1.812744 -5.136108  -1.913452  -8.761597
+## 6 -3.524780 -43.807983   6.546021 10.574341  -0.100708   0.302124
 ```
 
 As you might have noticed, column names do not matter for the `cycles` data frame, but they do for `emg`: this is convenient for the subsequent analysis, since you don't want to loose track of which columns refer to which muscle. Also, the first column must always contain time information, in the same format as in the `cycles` data frame (preferably in seconds).
@@ -164,7 +180,7 @@ pp <- plot_rawEMG(RAW_DATA[[1]],
 )
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 ```r
 # The raw EMG data set then needs to be filtered
@@ -227,7 +243,8 @@ another_norm_EMG <- lapply(
 )
 
 # The filtered and time-normalised EMG can be plotted with the following
-pp <- plot_meanEMG(norm_EMG[[1]],
+pp <- plot_meanEMG(
+  norm_EMG[[1]],
   trial = names(norm_EMG)[1],
   row_number = 4,
   col_number = 4,
@@ -237,7 +254,7 @@ pp <- plot_meanEMG(norm_EMG[[1]],
 )
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
 # At this stage, synergies can be extracted
@@ -245,7 +262,8 @@ pp <- plot_meanEMG(norm_EMG[[1]],
 SYNS <- lapply(norm_EMG, synsNMF)
 
 # The extracted synergies can be plotted with the following
-pp <- plot_syn_trials(SYNS[[1]],
+pp <- plot_syn_trials(
+  SYNS[[1]],
   max_syns = max(unlist(lapply(SYNS, function(x) x$syns))),
   trial = names(SYNS)[1],
   dark_mode = TRUE,
@@ -255,7 +273,7 @@ pp <- plot_syn_trials(SYNS[[1]],
 )
 ```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
 # Now synergies don't have a functional order and need classification
@@ -273,7 +291,8 @@ SYNS_classified <- classify_kmeans(SYNS)
 
 ```r
 # Classified synergies can be finally plotted with
-pp <- plot_classified_syns(SYNS_classified,
+pp <- plot_classified_syns(
+  SYNS_classified,
   dark_mode = TRUE,
   line_col = "tomato1",
   sd_col = "tomato4",
@@ -281,16 +300,17 @@ pp <- plot_classified_syns(SYNS_classified,
 ) # "TW" = Treadmill Walking, change with your own
 ```
 
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 # A 2D UMAP plot of the classified synergies can be obtained with
-pp <- plot_classified_syns_UMAP(SYNS_classified,
+pp <- plot_classified_syns_UMAP(
+  SYNS_classified,
   condition = "TW"
 )
 ```
 
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 # From now on, it's all about the analysis
@@ -316,10 +336,10 @@ hm_plot[which(hm_plot < hm)] <- NA
 # Plots
 plot(prim_sub, ty = "l", xlab = "Time", ylab = "Amplitude")
 lines(hm_plot, lwd = 3, col = 2) # FWHM (horizontal, in red)
-graphics::abline(v = prim_sub_CoA, lwd = 3, col = 4) # Coa (vertical, in blue)
+graphics::abline(v = prim_sub_CoA, lwd = 3, col = 4) # CoA (vertical, in blue)
 ```
 
-![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 # Or perhaps one might want to investigate the nonlinear behaviour of a long primitive
@@ -327,7 +347,7 @@ prim <- primitive$signal
 
 # Calculate the local complexity or Higuchi's fractal dimension (HFD)
 nonlin_HFD <- HFD(prim)$Higuchi
-# Calculate the local complexity or Hurst exponent (H)
+# Calculate the global complexity or Hurst exponent (H)
 nonlin_H <- Hurst(prim, min_win = max(primitive$time))$Hurst
 
 message("Higuchi's fractal dimension: ", round(nonlin_HFD, 3))
@@ -344,3 +364,5 @@ message("Hurst exponent: ", round(nonlin_H, 3))
 ```
 ## Hurst exponent: 0.338
 ```
+## How to contribute to `musclesyneRgies`
+Thank you for taking the time to read this. Please refer to the [CONTRIBUTING](https://github.com/alesantuz/musclesyneRgies/blob/master/CONTRIBUTING.md) section for a guide on how to contribute to this package.

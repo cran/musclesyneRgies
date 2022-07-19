@@ -71,7 +71,7 @@ synsNMF <- function(V,
     as.matrix()
 
   # Replace values <= 0 with the smallest non-zero value
-  V[V <= 0] <- min(V[V > 0], na.rm = T)
+  V[V <= 0] <- min(V[V > 0], na.rm = TRUE)
 
   m <- nrow(V) # Number of muscles
   n <- ncol(V) # Number of time points
@@ -85,7 +85,9 @@ synsNMF <- function(V,
     rank_type <- "fixed"
   }
 
+  syn_index <- 0
   for (r in min_syns:max_syns) { # Run NMF with different initial conditions
+    syn_index <- syn_index + 1
     R2_choice <- numeric() # Collect the R2 values for each syn and choose the max
 
     # Preallocate to then choose those with highest R2
@@ -142,11 +144,11 @@ synsNMF <- function(V,
 
     choice <- which.max(R2_choice)
 
-    R2_cross[r] <- R2_choice[choice]
-    M_list[[r]] <- M_temp[[choice]]
-    P_list[[r]] <- P_temp[[choice]]
-    Vr_list[[r]] <- Vr_temp[[choice]]
-    iters[r] <- iter
+    R2_cross[syn_index] <- R2_choice[choice]
+    M_list[[syn_index]] <- M_temp[[choice]]
+    P_list[[syn_index]] <- P_temp[[choice]]
+    Vr_list[[syn_index]] <- Vr_temp[[choice]]
+    iters[syn_index] <- iter
   }
 
   if (is.na(fixed_syns)) {
@@ -159,7 +161,7 @@ synsNMF <- function(V,
         break
       }
       R2_interp <- data.frame(
-        synergies = c(1:(r - iter + 1)),
+        synergies = 1:(r - iter + 1),
         R2_values = R2_cross[iter:r]
       )
 
@@ -167,23 +169,37 @@ synsNMF <- function(V,
       MSE <- sum((lin - R2_interp$R2_values)^2) / nrow(R2_interp)
     }
     syns_R2 <- iter
+
+    P_choice <- data.frame(time, t(P_list[[syns_R2]]))
+    colnames(P_choice) <- c("time", paste0("Syn", seq_len(ncol(P_choice) - 1)))
+    rownames(P_choice) <- NULL
+    colnames(M_list[[syns_R2]]) <- paste0("Syn", seq_len(ncol(M_list[[syns_R2]])))
+    M_choice <- M_list[[syns_R2]]
+    Vr_choice <- Vr_list[[syns_R2]]
+    iters <- as.numeric(iters[syns_R2])
   } else if (is.numeric(fixed_syns)) {
     syns_R2 <- fixed_syns
-  }
 
-  P_choice <- data.frame(time, t(P_list[[syns_R2]]))
-  colnames(P_choice) <- c("time", paste0("Syn", 1:(ncol(P_choice) - 1)))
-  rownames(P_choice) <- NULL
-  colnames(M_list[[syns_R2]]) <- paste0("Syn", 1:ncol(M_list[[syns_R2]]))
+    P_choice <- data.frame(time, t(P_list[[1]]))
+    colnames(P_choice) <- c("time", paste0("Syn", seq_len(ncol(P_choice) - 1)))
+    rownames(P_choice) <- NULL
+    colnames(M_list[[1]]) <- paste0("Syn", seq_len(ncol(M_list[[1]])))
+    M_choice <- M_list[[1]]
+    Vr_choice <- Vr_list[[1]]
+    iters <- as.numeric(iters[1])
+  }
 
   SYNS <- list(
     syns = as.numeric(syns_R2),
-    M = M_list[[syns_R2]],
+    M = M_choice,
     P = P_choice,
     V = V,
-    Vr = Vr_list[[syns_R2]],
-    iterations = as.numeric(iters[syns_R2]),
-    R2 = as.numeric(R2_cross[syns_R2]),
+    Vr = Vr_choice,
+    iterations = iters,
+    R2 = data.frame(
+      synergies = min_syns:max_syns,
+      R2 = R2_cross
+    ),
     classification = "none",
     rank_type = rank_type
   )

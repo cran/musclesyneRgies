@@ -1,3 +1,174 @@
+# musclesyneRgies 1.2.5
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Removed dependency from `gtools`
+- Removed JOSS paper folder.
+
+# musclesyneRgies 1.2.4
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Increased robustness of `subsetEMG`
+- Added tests for `subsetEMG`
+- Updated `CITATION` files
+- `synsNMF` now saves the synergy-vs-quality data.
+
+# musclesyneRgies 1.2.3
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Removed ISBNs from JOSS paper bibliography.
+
+# musclesyneRgies 1.2.2
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Corrected JOSS paper bibliography.
+
+# musclesyneRgies 1.2.1
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Version ready for JOSS paper after spell check.
+
+# musclesyneRgies 1.2.0
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Version ready for JOSS paper.
+
+# musclesyneRgies 1.1.3.9006 (development version)
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Cleaned and adjusted code according to `goodpractice::gp()` suggestions (thanks @fabian_s for the hint!)
+- Added more tests for `classify_kmeans`, `synsNMF`, `subsetEMG`, `sMLE`, `normEMG`, `Hurst`, `HFD`, `filtEMG`, `plot_classified_syns_UMAP`, `plot_meanEMG`, `plot_rawEMG`.
+
+# musclesyneRgies 1.1.3.9005 (development version)
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Added to README the possibility to download a full data set from Zenodo
+- Added definition of muscle synergies to README
+- Added definition of motor modules and motor primitives to README
+- Improved documentation of `classify_kmeans`, `HFD` and `Hurst`
+- Added test for `classify_kmeans`.
+
+# musclesyneRgies 1.1.3.9004 (development version)
+### How to install
+```
+install.packages("remotes")
+remotes::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Updated tests to check for compatibility with single-column cycles.
+
+# musclesyneRgies 1.1.3.9003 (development version)
+### How to install
+```
+install.packages("devtools")
+devtools::install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Improved robustness of EMG pre-processing functions for one-column cycle times.
+
+# musclesyneRgies 1.1.3.9002 (development version)
+### How to install
+```
+install.packages("devtools")
+library(devtools)
+install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Removed `emg` data frame row names in `RAW_DATA` list
+- Updated JOSS paper draft
+- `rawdata` can now handle RData files saved with `save()`.
+
+# musclesyneRgies 1.1.3.9001 (development version)
+### How to install
+```
+install.packages("devtools")
+library(devtools)
+install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Added Open Journals PDF Generator GitHub Action
+- First JOSS paper draft.
+
+# musclesyneRgies 1.1.3.9000 (development version)
+### How to install
+```
+install.packages("devtools")
+library(devtools)
+install_github("alesantuz/musclesyneRgies")
+```
+### How to use
+README and vignettes are available both on [CRAN](https://CRAN.R-project.org/package=musclesyneRgies) and on [GitHub](https://github.com/alesantuz/musclesyneRgies).
+
+### What's changed
+- Improved robustness of `normEMG` function.
+
 # musclesyneRgies 1.1.3
 
 ### How to install

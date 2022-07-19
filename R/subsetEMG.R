@@ -42,28 +42,32 @@ subsetEMG <- function(x,
   if (!inherits(x, "EMG")) {
     stop("Object is not of class EMG, please create objects in the right format with \"rawdata\"")
   } else {
-    cycles <- x$cycles
+    cycles <- data.frame(x$cycles)
     x <- x$emg
   }
 
-  sub <- as.numeric(cycles[cy_start + cy_max + 1, 1])
+  # Determine the first and last time points
+  first <- as.numeric(cycles[cy_start, 1])
+  last <- as.numeric(cycles[cy_start + cy_max, 1])
+  # Determine the first and last useful rows in EMG data set
+  start_emg <- utils::tail(which(x[, 1] <= first), 1)
+  stop_emg <- utils::head(which(x[, 1] > last), 1)
 
-  # Check if there are more than cy_max+2 cycles and do not trim if false
-  label <- which(x[, 1] > sub)[1]
-
-  if (!is.na(label)) {
+  # Subset data
+  if (length(start_emg) == 1 && length(stop_emg) == 1) {
     RAW_DATA <- list(
-      cycles = cycles[cy_start:(cy_max + 1), ],
-      emg = x[1:label, ]
+      cycles = cycles[cy_start:(cy_max + cy_start), ],
+      emg = x[start_emg:stop_emg, ]
     )
-  } else {
+  } else if (length(start_emg) == 1 && length(stop_emg) == 0) {
     RAW_DATA <- list(
-      cycles = cycles,
-      emg = x
+      cycles = cycles[cy_start:nrow(cycles), ],
+      emg = x[start_emg:nrow(x), ]
     )
+  } else if (length(start_emg) == 0) {
+    stop("Cycle times do not match time column in the EMG data!")
   }
 
   class(RAW_DATA) <- "EMG"
-
   return(RAW_DATA)
 }

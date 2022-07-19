@@ -2,7 +2,7 @@
 #'
 #' @param x Object of class `EMG` with elements `cycles` and `emg`
 #' @param demean Logical: should EMG be demeaned?
-#' @param rectif Rectification type: "fullwave", halfwave" or "none"
+#' @param rectif Rectification type: "fullwave", "halfwave" or "none"
 #' @param HPf High-pass filter cut-off frequency, use 0 to exclude high-pass filtering
 #' @param HPo High-pass filter order
 #' @param LPf Low-pass filter cut-off frequency, use 0 to exclude Low-pass filtering
@@ -54,7 +54,7 @@ filtEMG <- function(x,
   if (!inherits(x, "EMG")) {
     stop("Object is not of class EMG, please create objects in the right format with \"rawdata\"")
   } else {
-    cycles <- x$cycles
+    cycles <- data.frame(x$cycles)
     x <- x$emg
   }
 
@@ -62,13 +62,13 @@ filtEMG <- function(x,
   time <- x[, 1]
 
   # EMG system acquisition frequency [Hz]
-  freq <- round(1 / (mean(diff(time), na.rm = T)), 0)
+  freq <- round(1 / (mean(diff(time), na.rm = TRUE)), 0)
 
   # Remove time column
   x <- x[, -1]
 
   if (isTRUE(demean)) {
-    x <- apply(x, 2, function(y) y - mean(y, na.rm = T))
+    x <- apply(x, 2, function(y) y - mean(y, na.rm = TRUE))
   }
 
   if (HPf != 0) {
@@ -97,7 +97,7 @@ filtEMG <- function(x,
   }
 
   # Replace values <= 0 with the smallest non-zero value
-  x[x <= 0] <- min(x[x > 0], na.rm=T)
+  x[x <= 0] <- min(x[x > 0], na.rm = TRUE)
 
   if (isTRUE(min_sub)) {
     # Subtract the minimum
